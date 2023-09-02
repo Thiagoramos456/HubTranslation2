@@ -1,10 +1,13 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Printing;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using HubFiles;
+using HubTranslationUI.Models;
 using LibreTranslate;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
@@ -18,31 +21,68 @@ namespace HubTranslationUI
     public partial class MainWindow : Window
     {
         private IConfiguration Configuration;
+        public string folderPathFull { get; set; }
+
+        public List<TranslationCard> TranslationCards { get; set; } = new List<TranslationCard>()
+        {
+            new TranslationCard() { Language = "en-US", Text = "Hello World Man WOW" },
+            new TranslationCard() { Language = "it-IT", Text = "Hello World Man WOW" },
+            new TranslationCard() { Language = "es-ES", Text = "Hello World Man WOW" },
+            new TranslationCard() { Language = "pt-BR", Text = "Hello World Man WOW" },
+        };
 
         public MainWindow()
         {
             InitializeComponent();
-            //InitializeConfiguration();
+            InitializeConfiguration();
+            folderPath.Text = GetAbbreviatedPath(folderPathFull);
+
+            TranslationCardsItemsControl.ItemsSource = TranslationCards;
+        }
+
+        private string GetAbbreviatedPath(string? path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return "...";
+            }
+            return path.Split('\\').TakeLast(2).Aggregate((a, b) => a + "\\" + b);
         }
 
         private void selectFolderBtn_Click(object sender, RoutedEventArgs e)
         {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                folderPath.Text = dialog.FileName;
+                var json = JsonSerializer.Serialize(new AppSettingsJson
+                {
+                    AppSettings = new AppSettings
+                    {
+                        UserSelectedFolder = dialog.FileName
+                    }
+                });
 
+                File.WriteAllText("appsettings.json", json);
+
+                folderPath.Text = GetAbbreviatedPath(dialog.FileName);
+            }
         }
 
-        //private void InitializeConfiguration()
-        //{
-        //    Configuration = new ConfigurationBuilder()
-        //        .AddJsonFile("appsettings.json")
-        //        .Build();
+        private void InitializeConfiguration()
+        {
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
 
-        //    var userSelectedFolder = Configuration.GetSection("AppSettings")["UserSelectedFolder"];
+            var userSelectedFolder = Configuration.GetSection("AppSettings")["UserSelectedFolder"];
 
-        //    if (!string.IsNullOrEmpty(userSelectedFolder))
-        //    {
-        //        folder_text.Text = userSelectedFolder;
-        //    }
-        //}
+            if (!string.IsNullOrEmpty(userSelectedFolder))
+            {
+                folderPathFull = userSelectedFolder;
+            }
+        }
 
         //private void selectFolderBtn_Click(object sender, RoutedEventArgs e)
         //{

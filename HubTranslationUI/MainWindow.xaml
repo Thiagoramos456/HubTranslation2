@@ -5,63 +5,114 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:HubTranslationUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:HubTranslationUI.Models"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     Title="MainWindow"
     Width="800"
-    Height="450"
+    Height="400"
+    d:Height="700"
     ui:WindowHelper.UseModernWindowStyle="True"
     Background="{DynamicResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.ColumnSpan="3"
+    <ScrollViewer>
+
+        <Grid Width="800" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border
+                Margin="0,0,0,30"
+                Padding="20"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                FontSize="36">
-                Selecione a pasta de traduções
-            </TextBlock>
-            <Button
-                x:Name="selectFolderBtn"
-                Grid.Column="0"
-                Margin="13,10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"
-                Click="selectFolderBtn_Click"
-                FontSize="16">
-                Selecionar pasta
-            </Button>
-            <Line
-                Grid.Column="1"
-                Margin="15,0,10,0"
-                VerticalAlignment="Bottom"
-                Stroke="{DynamicResource SystemControlPageTextBaseHighBrush}"
-                StrokeEndLineCap="Round"
-                StrokeStartLineCap="Round"
-                StrokeThickness="1"
-                X1="0"
-                X2="15"
-                Y1="50"
-                Y2="0" />
-            <TextBlock
-                Grid.Column="2"
-                Margin="20,12"
-                VerticalAlignment="Bottom"
-                FontSize="20"
-                FontWeight="Light"
-                Text="Placeholder" />
+                Background="{DynamicResource LayerFillColorDefaultBrush}"
+                CornerRadius="8">
+                <ui:SimpleStackPanel Spacing="17">
+                    <TextBlock
+                        Grid.ColumnSpan="3"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        FontSize="20">
+                        Selecione a pasta de traduções
+                    </TextBlock>
+
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button
+                            x:Name="selectFolderBtn"
+                            Grid.Column="0"
+                            Margin="13,10"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Click="selectFolderBtn_Click">
+                            Selecionar pasta
+                        </Button>
+                        <Line
+                            Grid.Column="1"
+                            Margin="15,0,10,0"
+                            VerticalAlignment="Bottom"
+                            Stroke="{DynamicResource SystemControlPageTextBaseHighBrush}"
+                            StrokeEndLineCap="Round"
+                            StrokeStartLineCap="Round"
+                            StrokeThickness="1"
+                            X1="0"
+                            X2="15"
+                            Y1="50"
+                            Y2="0" />
+                        <TextBlock
+                            x:Name="folderPath"
+                            Grid.Column="2"
+                            MaxWidth="200"
+                            Margin="20,12"
+                            VerticalAlignment="Bottom"
+                            FontSize="13"
+                            FontWeight="Light"
+                            Text="..." />
+                    </StackPanel>
+                </ui:SimpleStackPanel>
+            </Border>
+            <Border
+                Grid.Row="1"
+                Padding="20"
+                Background="{DynamicResource LayerFillColorDefaultBrush}"
+                CornerRadius="8">
+                <ui:SimpleStackPanel Spacing="20">
+                    <TextBox ui:ControlHelper.Header="Qual termo você gostaria de traduzir?" />
+                    <TextBox ui:ControlHelper.Header="Informe uma palavra única que represente o termo (ex. MyTranslation)" />
+                    <Button HorizontalAlignment="center">Traduzir</Button>
+                </ui:SimpleStackPanel>
+            </Border>
+            <StackPanel Grid.Row="2" Margin="5,35,0,0">
+                <ItemsControl x:Name="TranslationCardsItemsControl">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="models:TranslationCard">
+                            <Border
+                                Margin="5"
+                                Padding="20"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                CornerRadius="8">
+                                <ui:SimpleStackPanel Spacing="10">
+                                    <TextBlock FontSize="11.5" Text="{Binding Language}" />
+                                    <TextBlock FontWeight="SemiBold" Text="{Binding Text}" />
+                                </ui:SimpleStackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button HorizontalAlignment="center">Aplicar</Button>
+
+            </StackPanel>
+
+
         </Grid>
-    </Grid>
+    </ScrollViewer>
 
 </Window>
