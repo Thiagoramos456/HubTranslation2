@@ -84,26 +84,6 @@ namespace HubTranslationUI
             }
         }
 
-        //private void selectFolderBtn_Click(object sender, RoutedEventArgs e)
-        //{
-        //    CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-        //    dialog.IsFolderPicker = true;
-        //    if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-        //    {
-        //        folder_text.Text = dialog.FileName;
-        //        var json = JsonSerializer.Serialize(new AppSettingsJson
-        //        {
-        //            AppSettings = new AppSettings
-        //            {
-        //                UserSelectedFolder = dialog.FileName
-        //            }
-        //        });
-
-        //        File.WriteAllText("appsettings.json", json);
-
-        //    }
-        //}
-
         //private async void translate_button_Click(object sender, RoutedEventArgs e)
         //{
         //    Translation translation = new Translation();
